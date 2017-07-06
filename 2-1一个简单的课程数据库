@@ -1,0 +1,26 @@
+2-1一个简单的课程数据库
+
+目标，创建后的数据库需要满足以下需求：
+
+MySQL 服务处于运行状态
+新的数据库名称为 shiyanlou，设置的可读写的管理用户为 shiyanlou，密码为 shiyanlou。
+shiyanlou 数据库包含三个表：user，course，usercourse，每个表包含一个 csv 数据文件中的所有数据。user 表包含两列：id，name。course 表包含两列：id，name。usercourse 表包含四列：id，user_id，course_id，study_time，注意与其他两个表主键之间的关系。
+
+解决过程：
+1.首先启动mysql服务：sudo service mysql start;
+2.创建数据库：create database shiyanlou;
+3.建表：以第三个为例子(感觉这个题目给的数据少了一列)
+	create table usercourse(
+	user_id int not null,
+	source_id int not null,
+	study_time int not null,
+	foreign key (user_id) references user(id),
+	foreign key(course_id) references course(id)
+	);
+4.导入数据：
+load data infile '路径' into table usercourse fields terminated by ',';
+注意：导入中文时要设置字符集：
+load data infile '路径' into table course character set utf8 fields terminated by ',';
+5.创建用户和授权：
+create user 'shiyanlou'@'localhost' identified by 'shiyanlou';
+grant select,insert on shiyanlou.* to 'shiyanlou'@'localhost';
