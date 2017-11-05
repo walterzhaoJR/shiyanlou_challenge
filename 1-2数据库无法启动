@@ -1,0 +1,13 @@
+数据库无法启动
+问题描述：
+	数据库无法启动
+
+解决过程：
+	启动mysql服务：sudo service mysql restart，发现失败，观察日志可得，TCP/IP的问题，配置文件中ip地址配置错误，在/etc/mysql/my.cnf修改ip地址为17.0.0.1，再起启动，发现/var/run/mysqld目录的权限问题，那么修改权限：sudo chmod a+wrx /var/run/mysqld，或者修改用户组：sudo chown mysql:msyql /var/run/mysqld，随后启动mysql服务
+	接下来重置mysql中root账户的密码：
+	首先停止mysql的服务：sudo service mysql stop
+	使用特权登录数据库：sudo mysqld_safe --skip-grant-tables&
+	登录数据库：mysql -uroot mysql
+	重置密码：update user set password=PASSWORD("shiyanlou") where user='root';
+	刷新特权：flush privileges;
+	退出：quit，重启mysql服务：sudo service mysql restart，并使用root用户登录

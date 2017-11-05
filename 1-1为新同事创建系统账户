@@ -1,0 +1,26 @@
+为新同事创建系统账户
+问题描述：
+	创建的新账号要求如下：
+		用户名：lousai
+		Home 目录：/home/lousai
+		允许 lousai 使用 SSH 登陆系统
+		lousai 用户默认使用 zsh
+		lousai 用户需要 sudo 权限
+
+解决过程：
+	首先创建用户：
+	sudo useradd -d /home/lousai -m -s /bin/zsh lousai
+	其中：
+		-d表示此用户的主目录(家目录)
+		-m表示没有字目录时，创建此目录
+		-s指定本用户使用的shell
+		最后面为用户名
+	拓展：
+		修改用户密码：passwd user_name
+		删除用户：userdel user_name
+
+	添加ssh权限：
+		在/etc/ssh/ssh_config 文件中添加 AllowUsers user_name 即可，这个是允许用户在任何地点登录，AllowUsers root@192.168.0.1表示在指定的ip下登录。随后重启ssh服务：service sshd restart。
+	添加sudo权限：
+		修改/etc/sudoers文件，找到这一 行："root ALL=(ALL) ALL"在起下面添加"xxx ALL=(ALL) ALL"(这里的xxx是你的用户名，然后保存退出。但是这个方法需要root权限。
+		可以这样解决，直接将榕湖添加到sudo组里边就好了：sudo usermod -aG sudo lousai

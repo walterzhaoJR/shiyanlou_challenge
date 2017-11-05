@@ -1,0 +1,12 @@
+x-0:MySQL 基础课程-成绩管理系统的数据操作
+问题：在挑战实验1中构建的成绩管理系统中，物理老师想要找出分数最高的同学进行表扬，请你找出这个同学并把他的信息（id、姓名、性别）输出到路径 /tmp/ 下的 physics.txt文件中。同时 Tom 的化学成绩有异议，需要在原来的基础上加3分，请更新 Tom 的化学成绩。
+
+解决过程：
+1.首先启动mysql服务：sudo service musql start;
+2.获取实验数据；
+3.查找物理最高的学生：
+select * from student where sid = (select sid from mark where cid = (select cid from course where cname = 'physics') order by score desc limit 1);
+4.导出数据：
+select * from student where sid = (select sid from mark where cid = (select cid from course where cname = 'physics') order by score desc limit 1) into outfile '/tmp/physics.txt';
+5.修改Tom的成绩：
+update mark set score = score + 3 where (sid = (select sid from student where sname = 'Tom' ) and cid = (select cid from course where cname = 'chemistry'));
